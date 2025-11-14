@@ -16,6 +16,7 @@ type Task struct {
 	CPU           float64
 	Memory        int64
 	Disk          int64
+	Env           []string
 	ExposedPorts  nat.PortSet
 	HostPorts     nat.PortMap
 	PortBindings  map[string]string
