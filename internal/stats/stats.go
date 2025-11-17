@@ -17,7 +17,7 @@ type Stats struct {
 	TaskCount int
 }
 
-func New() *Stats {
+func GetStats() *Stats {
 	return &Stats{
 		MemStats:  getMemoryInfo(),
 		DiskStats: getDiskInfo(),
