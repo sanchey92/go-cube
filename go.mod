@@ -7,5 +7,6 @@ require (
 	github.com/docker/go-connections v0.6.0
 	github.com/google/uuid v1.6.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
-	github.com/golang-collections/collections v0.0.0-20130729185459-604e922904d3 // indirect
+	github.com/go-chi/chi/v5 v5.2.3 // indirect
+    github.com/golang-collections/collections v0.0.0-20130729185459-604e922904d3 // indirect
 )
