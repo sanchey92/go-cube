@@ -62,8 +62,8 @@ func (w *Worker) GetTasks() []*task.Task {
 }
 
 func (w *Worker) GetTaskByID(taskID uuid.UUID) (*task.Task, bool) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
+	w.mu.RLock()
+	defer w.mu.RUnlock()
 	t, ok := w.db[taskID]
 	return t, ok
 }
