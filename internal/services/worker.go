@@ -61,6 +61,13 @@ func (w *Worker) GetTasks() []*task.Task {
 	return tasks
 }
 
+func (w *Worker) GetTaskByID(taskID uuid.UUID) (*task.Task, bool) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	t, ok := w.db[taskID]
+	return t, ok
+}
+
 func (w *Worker) StartTask(ctx context.Context, t *task.Task) *models.ContainerResult {
 	result := w.containerClient.Run(ctx, t)
 
