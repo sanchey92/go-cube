@@ -26,6 +26,14 @@ func GetStats() *Stats {
 	}
 }
 
+func (s *Stats) DiskTotal() uint64 {
+	return s.DiskStats.Total
+}
+
+func (s *Stats) MemTotalKb() uint64 {
+	return s.MemStats.Total / 1024
+}
+
 func getMemoryInfo() *mem.VirtualMemoryStat {
 	info, err := mem.VirtualMemory()
 	if err != nil {

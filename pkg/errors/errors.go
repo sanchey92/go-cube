@@ -6,11 +6,14 @@ import (
 )
 
 var (
-	ErrRequestBodyEmpty = errors.New("request body is empty")
-	ErrJSONEncoding     = errors.New("failed json encoding")
-	ErrInvalidTaskID    = errors.New("taskID is empty")
-	ErrTaskNotFound     = errors.New("task not found")
-	ErrInvalidTaskState = errors.New("task is not in a valid state for this operation")
+	ErrRequestBodyEmpty   = errors.New("request body is empty")
+	ErrJSONEncoding       = errors.New("failed json encoding")
+	ErrInvalidTaskID      = errors.New("taskID is empty")
+	ErrTaskNotFound       = errors.New("task not found")
+	ErrInvalidTaskState   = errors.New("task is not in a valid state for this operation")
+	ErrUnableConnectToAPI = errors.New("unable connect to api")
+	ErrRetrievingStats    = errors.New("retrieving stats failed")
+	ErrDecodingMessage    = errors.New("decoding message is failed")
 )
 
 type ErrResponse struct {
