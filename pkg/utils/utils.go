@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/sanchey92/go-cube/pkg/errors"
 )
 
 const (
@@ -13,7 +16,7 @@ const (
 
 func DecodeJSON(w http.ResponseWriter, r *http.Request, v interface{}) error {
 	if r.Body == nil {
-		WriteResponse(w, http.StatusBadRequest, BadRequest(ErrRequestBodyEmpty))
+		WriteResponse(w, http.StatusBadRequest, errors.BadRequest(errors.ErrRequestBodyEmpty))
 		return fmt.Errorf("request body is empty")
 	}
 
@@ -26,7 +29,7 @@ func DecodeJSON(w http.ResponseWriter, r *http.Request, v interface{}) error {
 
 	if err := json.NewDecoder(r.Body).Decode(v); err != nil {
 		log.Printf("failed to decode JSON: %v", err)
-		WriteResponse(w, http.StatusBadRequest, BadRequest(ErrJSONEncoding))
+		WriteResponse(w, http.StatusBadRequest, errors.BadRequest(errors.ErrJSONEncoding))
 		return fmt.Errorf("invalid input data")
 	}
 
@@ -39,4 +42,21 @@ func WriteResponse(w http.ResponseWriter, statusCode int, v interface{}) {
 	if err := json.NewEncoder(w).Encode(v); err != nil {
 		log.Printf("encoding failed: %v", err)
 	}
+}
+
+func HTTPWithTRetry(f func(string) (*http.Response, error), url string) (*http.Response, error) {
+	count := 10
+	var resp *http.Response
+	var err error
+
+	for i := 0; i < count; i++ {
+		resp, err = f(url)
+		if err != nil {
+			fmt.Printf("Err callong url: %v\n", url)
+			time.Sleep(time.Second * 5)
+		} else {
+			break
+		}
+	}
+	return resp, err
 }

@@ -1,4 +1,4 @@
-package services
+package worker
 
 import (
 	"context"
@@ -12,7 +12,8 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/sanchey92/go-cube/internal/models"
-	"github.com/sanchey92/go-cube/internal/task"
+	"github.com/sanchey92/go-cube/internal/services/stats"
+	"github.com/sanchey92/go-cube/internal/services/task"
 )
 
 type Container interface {
@@ -27,7 +28,7 @@ type Worker struct {
 	mu              sync.RWMutex
 	db              map[uuid.UUID]*task.Task
 	containerClient Container
-	stats           *Stats
+	stats           *stats.Stats
 	taskCount       atomic.Int32
 }
 
@@ -40,7 +41,7 @@ func New(name string, containerClient Container) *Worker {
 	}
 }
 
-func (w *Worker) GetStats() *Stats {
+func (w *Worker) GetStats() *stats.Stats {
 	return w.stats
 }
 
@@ -117,7 +118,7 @@ func (w *Worker) CollectStats(ctx context.Context) {
 		case <-ticker.C:
 			log.Println("collecting stats")
 			w.mu.Lock()
-			w.stats = GetStats()
+			w.stats = stats.GetStats()
 			w.mu.Unlock()
 			w.taskCount.Add(1)
 		}

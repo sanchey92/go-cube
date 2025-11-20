@@ -7,8 +7,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 
-	"github.com/sanchey92/go-cube/internal/http/utils"
-	"github.com/sanchey92/go-cube/internal/task"
+	"github.com/sanchey92/go-cube/internal/services/task"
+	"github.com/sanchey92/go-cube/pkg/errors"
+	"github.com/sanchey92/go-cube/pkg/utils"
 )
 
 func (srv *Server) startHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,27 +29,27 @@ func (srv *Server) stopTaskHandler(w http.ResponseWriter, r *http.Request) {
 	taskID := chi.URLParam(r, "taskID")
 	if taskID == "" {
 		log.Printf("No taskID passed in request.\n")
-		utils.WriteResponse(w, http.StatusBadRequest, utils.BadRequest(utils.ErrInvalidTaskID))
+		utils.WriteResponse(w, http.StatusBadRequest, errors.BadRequest(errors.ErrInvalidTaskID))
 		return
 	}
 
 	tID, err := uuid.Parse(taskID)
 	if err != nil {
 		log.Printf("Invalid uuid: %q: %v\n", taskID, err)
-		utils.WriteResponse(w, http.StatusBadRequest, utils.BadRequest(err))
+		utils.WriteResponse(w, http.StatusBadRequest, errors.BadRequest(err))
 		return
 	}
 
 	taskToStop, ok := srv.worker.GetTaskByID(tID)
 	if !ok || taskToStop == nil {
 		log.Printf("task %v not found\n", tID)
-		utils.WriteResponse(w, http.StatusNotFound, utils.NotFound(utils.ErrTaskNotFound))
+		utils.WriteResponse(w, http.StatusNotFound, errors.NotFound(errors.ErrTaskNotFound))
 		return
 	}
 
 	if !task.ValidStateTransition(taskToStop.State, task.Completed) {
 		log.Printf("Cannot stop task %v in state %v\n", tID, taskToStop.State)
-		utils.WriteResponse(w, http.StatusConflict, utils.Conflict(utils.ErrInvalidTaskState))
+		utils.WriteResponse(w, http.StatusConflict, errors.Conflict(errors.ErrInvalidTaskState))
 		return
 	}
 

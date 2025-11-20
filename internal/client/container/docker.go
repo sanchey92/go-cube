@@ -14,7 +14,7 @@ import (
 	"github.com/docker/docker/pkg/stdcopy"
 
 	"github.com/sanchey92/go-cube/internal/models"
-	"github.com/sanchey92/go-cube/internal/task"
+	"github.com/sanchey92/go-cube/internal/services/task"
 )
 
 type Docker struct {

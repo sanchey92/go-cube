@@ -12,7 +12,7 @@ import (
 
 	client "github.com/sanchey92/go-cube/internal/client/container"
 	workerhttp "github.com/sanchey92/go-cube/internal/http/worker"
-	"github.com/sanchey92/go-cube/internal/services"
+	"github.com/sanchey92/go-cube/internal/services/worker"
 )
 
 const (
@@ -37,7 +37,7 @@ func run() error {
 	log.Println("Docker client created successfully")
 
 	// Create Worker service
-	worker := services.New(defaultWorkerName, dockerClient)
+	worker := worker.New(defaultWorkerName, dockerClient)
 	log.Printf("Worker '%s' initialized", defaultWorkerName)
 
 	// Create context for graceful shutdown

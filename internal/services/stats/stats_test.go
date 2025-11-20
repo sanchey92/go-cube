@@ -1,9 +1,13 @@
-package services
+package stats
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/sanchey92/go-cube/internal/services/worker"
+)
 
 func TestNew(t *testing.T) {
-	s := New()
+	s := worker.New()
 
 	if s == nil {
 		t.Fatal("New() returned nil")
