@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"github.com/sanchey92/go-cube/internal/node"
+	"github.com/sanchey92/go-cube/internal/services/node"
 	"github.com/sanchey92/go-cube/internal/services/task"
 )
 
