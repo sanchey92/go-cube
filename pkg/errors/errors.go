@@ -14,6 +14,8 @@ var (
 	ErrUnableConnectToAPI = errors.New("unable connect to api")
 	ErrRetrievingStats    = errors.New("retrieving stats failed")
 	ErrDecodingMessage    = errors.New("decoding message is failed")
+	ErrValueExists        = errors.New("value already exists")
+	ErrValueNotExists     = errors.New("value not exists")
 )
 
 type ErrResponse struct {
