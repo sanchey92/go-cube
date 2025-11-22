@@ -62,7 +62,7 @@ func (c *HTTPClient) doRequest(ctx context.Context, method, url string, body io.
 	}
 
 	if result != nil {
-		if err = json.NewDecoder(req.Body).Decode(result); err != nil {
+		if err = json.NewDecoder(resp.Body).Decode(result); err != nil {
 			return fmt.Errorf("failed to decode response: %w", err)
 		}
 	}
