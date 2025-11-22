@@ -14,13 +14,10 @@ var (
 	ErrUnableConnectToAPI     = errors.New("unable connect to api")
 	ErrRetrievingStats        = errors.New("retrieving stats failed")
 	ErrDecodingMessage        = errors.New("decoding message is failed")
-	ErrValueExists            = errors.New("value already exists")
 	ErrValueNotExists         = errors.New("value not exists")
 	ErrCandidatesDoesntExists = errors.New("no available candidates")
 	ErrNoScored               = errors.New("no scored")
-	ErrFailedGetTasks         = errors.New("failed to get tasks")
-	ErrInvalidTypeExpected    = errors.New("invalid type expected")
-	ErrFailedSave             = errors.New("failed to save task to db")
+	ErrConnectingHealthCheck  = errors.New("error connecting to health check")
 )
 
 type ErrResponse struct {
@@ -30,10 +27,6 @@ type ErrResponse struct {
 
 func BadRequest(err error) *ErrResponse {
 	return newErrResponse(http.StatusBadRequest, err)
-}
-
-func InternalServerErr(err error) *ErrResponse {
-	return newErrResponse(http.StatusInternalServerError, err)
 }
 
 func NotFound(err error) *ErrResponse {
