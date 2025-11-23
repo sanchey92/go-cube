@@ -80,7 +80,7 @@ func New(workers []string, taskDB, eventDB Store, scheduler Scheduler) (*Manager
 	}, nil
 }
 
-func (m *Manager) AddTask(te *task.Event) {
+func (m *Manager) AddTask(te task.Event) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	log.Printf("[manager] adding task event %s to pending queue", te.ID)
@@ -101,15 +101,15 @@ func (m *Manager) GetTasks() ([]*task.Task, error) {
 	return tasks, nil
 }
 
-func (m *Manager) GetTaskByID(taskID string) *task.Task {
+func (m *Manager) GetTaskByID(taskID string) (*task.Task, error) {
 	m.mu.RLock()
 	defer m.mu.RLock()
 	t, err := m.taskDB.Get(taskID)
 	if err != nil {
 		log.Printf("error getting task from db: %v", err)
-		return nil
+		return nil, errors.ErrTaskNotFound
 	}
-	return t.(*task.Task)
+	return t.(*task.Task), nil
 }
 
 func (m *Manager) SelectWorker(t *task.Task) (*node.Node, error) {
@@ -186,9 +186,6 @@ func (m *Manager) ProcessTasks(ctx context.Context) {
 }
 
 func (m *Manager) SendWork(ctx context.Context) error {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
 	if m.pending.Len() == 0 {
 		log.Println("[manager] no work in the queue")
 		return nil
@@ -416,9 +413,7 @@ func (m *Manager) handleExistingTask(ctx context.Context, workerName string, te 
 func (m *Manager) assignTaskToWorker(ctx context.Context, te task.Event) error {
 	t := te.Task
 
-	m.mu.Unlock()
 	worker, err := m.SelectWorker(&t)
-	m.mu.Lock()
 
 	if err != nil {
 		return fmt.Errorf("failed to select worker for task %s: %w", t.ID, err)
