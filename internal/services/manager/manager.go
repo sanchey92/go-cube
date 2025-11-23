@@ -101,6 +101,17 @@ func (m *Manager) GetTasks() ([]*task.Task, error) {
 	return tasks, nil
 }
 
+func (m *Manager) GetTaskByID(taskID string) *task.Task {
+	m.mu.RLock()
+	defer m.mu.RLock()
+	t, err := m.taskDB.Get(taskID)
+	if err != nil {
+		log.Printf("error getting task from db: %v", err)
+		return nil
+	}
+	return t.(*task.Task)
+}
+
 func (m *Manager) SelectWorker(t *task.Task) (*node.Node, error) {
 	candidates := m.scheduler.SelectCandidates(t, m.workerNodes)
 	if candidates == nil || len(candidates) == 0 {
